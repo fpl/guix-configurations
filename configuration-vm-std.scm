@@ -6,7 +6,33 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu))
+(use-modules (gnu packages certs))
+(use-modules (gnu packages base))
+
 (use-service-modules cups desktop networking ssh xorg)
+
+;; Check if nss-certs is already in %base-packages
+(define %my-base-packages
+  (if (member nss-certs %base-packages) 
+    %base-packages ; If already present, don't add it
+    (cons nss-certs %base-packages))) ; Otherwise, add it
+
+;; This is to use only italian locales
+(define my-glibc-locales
+  (make-glibc-utf8-locales
+   glibc
+   #:locales (list "it_IT")
+   #:name "glibc-italian-utf8-locales"))
+
+(modify-services %desktop-services
+   (guix-service-type config => (guix-configuration
+     (inherit config)
+     (substitute-urls
+      (append (list "https://substitutes.nonguix.org")
+        %default-substitute-urls))
+     (authorized-keys
+      (append (list (local-file "./nonguix-signing-key.pub"))
+        %default-authorized-guix-keys)))))
 
 (operating-system
   (locale "it_IT.utf8")
@@ -23,17 +49,11 @@
                   (supplementary-groups '("wheel" "netdev" "audio" "video")))
                 %base-user-accounts))
 
-  ;; Check if nss-certs is already in %base-packages
-  (define %my-base-packages
-    (if (member nss-certs %base-packages) 
-      %base-packages ; If already present, don't add it
-      (cons nss-certs %base-packages))) ; Otherwise, add it
-
   ;; Packages installed system-wide.  Users can also install packages
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
   (packages (append (list 
-                      (specification->package "glibc-locales")
+                      my-glibc-locales
                       (specification->package "rsync")
                       (specification->package "curl")
                       (specification->package "git")
@@ -41,6 +61,12 @@
                       (specification->package "screen")
                       (specification->package "stow")
                       (specification->package "unison")
+                      (specification->package "vim")
+                      (specification->package "emacs")
+                      (specification->package "gcc-toolchain")
+                      (specification->package "make")
+                      (specification->package "cmake")
+                      (specification->package "file")
                     )
                     %my-base-packages))
 

@@ -1,3 +1,8 @@
+;;
+;; This is the configuration file for an Acer Laptop Travelmate 5446
+;;
+
+
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
 (use-modules (gnu))
@@ -9,6 +14,7 @@
   (keyboard-layout (keyboard-layout "it" "us"))
   (host-name "galadriel")
 
+  (kernel-arguments '("modprobe.blacklist=intel_ips,usbmouse,usbkbd quiet"))
   ;; The list of user accounts ('root' is implicit).
   (users (cons* (user-account
                   (name "frankie")
@@ -38,6 +44,7 @@
                       (specification->package "stow")
                       (specification->package "unison")
                       (specification->package "vim")
+                      (specification->package "emacs")
                       (specification->package "gnome-terminal")
                       (specification->package "gcc-toolchain")
                       (specification->package "perl")
