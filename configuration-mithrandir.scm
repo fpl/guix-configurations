@@ -1,11 +1,15 @@
+;; This is an operating system configuration generated
+;; by the graphical installer.
 ;;
-;; This is the current configuration file for mithrandir
-;; which is a tiny Asus EEE 1215-P Sea-shell laptop.
-;; 
+;; Once installation is complete, you can learn and modify
+;; this file to tweak the system configuration, and pass it
+;; to the 'guix system reconfigure' command to effect your
+;; changes.
+
 
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
-(use-modules (gnu) (guix channels))
+(use-modules (gnu) (guix channels) (nongnu packages linux))
 (use-service-modules cups desktop networking ssh xorg)
 
 ;;
@@ -23,12 +27,16 @@
                (authorized-keys
                 (append (list (local-file "./nonguix-signing-key.pub"))
                   %default-authorized-guix-keys))))
-
+         ;; This is to disable in anycase the auto-susped of the laptop
+         ;; which is permanently connected with its lid closed.
 	     (elogind-service-type config => (elogind-configuration 
                	(inherit config)
-		        (handle-lid-switch 'ignore)
-		        (handle-lid-switch-external-power 'ignore)
-		        (handle-lid-switch-docked 'ignore))))
+                (handle-lid-switch 'ignore)
+                (handle-lid-switch-external-power 'ignore)
+                (handle-lid-switch-docked 'ignore)))
+	     (gdm-service-type config => (gdm-configuration
+                (inherit config)
+                (auto-suspend? #f))) )
 )
 
 (set! %default-channels (list 
@@ -36,8 +44,6 @@
         (name 'nonguix)
         (url "https://gitlab.com/nonguix/nonguix.git")
         (branch "master")
-        (commit
-          "e6b3bb87a46024cd6b2fb1a1cad1387de0053f44")
         (introduction
           (make-channel-introduction
             "897c1a470da759236cc11798f4e0a5f7d4d59fbc"
@@ -45,10 +51,8 @@
               "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5"))))
       (channel
         (name 'guix)
-        (url "https://codeberg.org/git/guix.git")
+        (url "https://codeberg.org/guix/guix.git")
         (branch "master")
-        (commit
-          "b6d5a7f5836739dab884b49a64ca354794dd845f")
         (introduction
           (make-channel-introduction
             "9edb3f66fd807b096b48283debdcddccfea34bad"
@@ -57,6 +61,8 @@
 ))
 
 (operating-system
+  (kernel linux)
+  (firmware (list linux-firmware))
   (locale "it_IT.utf8")
   (timezone "Europe/Rome")
   (keyboard-layout (keyboard-layout "it" "us"))
@@ -97,7 +103,8 @@
                  (service openssh-service-type)
                  (service cups-service-type)
                  (set-xorg-configuration
-                  (xorg-configuration (keyboard-layout keyboard-layout))))
+                  (xorg-configuration (keyboard-layout keyboard-layout)))
+                 )
            ;; This is the custom list of services we
            ;; are appending to.
            %my-services))
