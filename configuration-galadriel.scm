@@ -8,6 +8,8 @@
 (use-modules (gnu))
 (use-modules (gnu packages certs))
 (use-modules (gnu packages base))
+(use-modules (gnu packages nss))
+
 (use-service-modules cups desktop networking ssh xorg)
 
 ;; Check if nss-certs is already in %base-packages
