@@ -12,6 +12,9 @@ cat >guix-config.scm <<EOF
 ;; used in this configuration.
 (use-modules (gnu))
 (use-modules (gnu system))
+(use-modules (gnu packages certs))
+(use-modules (gnu packages base))
+(use-modules (gnu packages nss))
 (use-modules (gnu services avahi))
 (use-service-modules desktop networking ssh)
 
@@ -19,6 +22,19 @@ cat >guix-config.scm <<EOF
 (define str "0123456789abcdefghijklmnopqrstuvwxyz")
 (define rnd-chr (lambda () (string-ref str (random (- (string-length str) 1)))))
 (define salt (lambda () (string-append (string (rnd-chr)) (string (rnd-chr)) (string (rnd-chr)))))
+
+;; Check if nss-certs is already in %base-packages
+(define %my-base-packages
+  (if (member nss-certs %base-packages)
+    %base-packages ; If already present, don't add it
+    (cons nss-certs %base-packages))) ; Otherwise, add it
+
+;; This is to use only italian locales
+(define my-glibc-locales
+  (make-glibc-utf8-locales
+   glibc
+   #:locales (list "it_IT")
+   #:name "glibc-italian-utf8-locales"))
 
 (operating-system
   (locale "en_US.utf8")
@@ -39,9 +55,17 @@ cat >guix-config.scm <<EOF
   ;; Packages installed system-wide.  Users can also install packages
   ;; under their own account: use 'guix search KEYWORD' to search
   ;; for packages and 'guix install PACKAGE' to install a package.
-  (packages (append (list (specification->package "nss-certs")
-                          (specification->package "rsync"))
-                    %base-packages))
+  (packages (append (list
+                        my-glibc-locales
+                        (specification->package "curl")
+                        (specification->package "git")
+                        (specification->package "htop")
+                        (specification->package "screen")
+                        (specification->package "stow")
+                        (specification->package "unison")
+                        (specification->package "vim")
+                        (specification->package "rsync"))
+                    %my-base-packages))
 
   ;; Below is the list of system services.  To search for available
   ;; services, run 'guix system search KEYWORD' in a terminal.

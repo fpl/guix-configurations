@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+# Create a VDI disk to be used for Guix setup (but any other distro too...)
+#
 
 VDI=guix-dsk.vdi
 
