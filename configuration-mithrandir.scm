@@ -22,21 +22,21 @@
              (guix-service-type config => (guix-configuration
                (inherit config)
                (substitute-urls
-                (append (list "https://substitutes.nonguix.org" "https://hydra-guix-129.guix.gnu.org")
+                (append (list "http://substitutes.lovergine.com https://substitutes.nonguix.org" "https://hydra-guix-129.guix.gnu.org")
                   (@@ (guix scripts substitute) %default-substitute-urls)))
                (authorized-keys
-                (append (list (local-file "./nonguix-signing-key.pub"))
+                (append (list (local-file "./nonguix-signing-key.pub") (local-file "./ladestem-signing-key.pub"))
                   %default-authorized-guix-keys))))
-         ;; This is to disable in anycase the auto-susped of the laptop
-         ;; which is permanently connected with its lid closed.
+
 	     (elogind-service-type config => (elogind-configuration 
                	(inherit config)
-                (handle-lid-switch 'ignore)
-                (handle-lid-switch-external-power 'ignore)
-                (handle-lid-switch-docked 'ignore)))
+		(handle-lid-switch 'ignore)
+		(handle-lid-switch-external-power 'ignore)
+		(handle-lid-switch-docked 'ignore)))
+
 	     (gdm-service-type config => (gdm-configuration
-                (inherit config)
-                (auto-suspend? #f))) )
+		(inherit config)
+		(auto-suspend? #f))) )
 )
 
 (set! %default-channels (list 
