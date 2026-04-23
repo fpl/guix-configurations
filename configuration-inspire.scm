@@ -22,7 +22,7 @@
                 (append (list "https://substitutes.nonguix.org" "https://hydra-guix-129.guix.gnu.org")
                   (@@ (guix scripts substitute) %default-substitute-urls)))
                (authorized-keys
-                (append (list (local-file "./nonguix-signing-key.pub") (local-file "./ladestem-signing-key.pub"))
+                (append (list (local-file "keys/nonguix-signing-key.pub") (local-file "keys/ladestem-signing-key.pub"))
                   %default-authorized-guix-keys))))))
 
 ;;

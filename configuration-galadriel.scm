@@ -32,7 +32,7 @@
       (append (list "https://substitutes.nonguix.org")
         %default-substitute-urls))
      (authorized-keys
-      (append (list (local-file "./nonguix-signing-key.pub"))
+      (append (list (local-file "keys/nonguix-signing-key.pub"))
         %default-authorized-guix-keys)))))
 
 (operating-system

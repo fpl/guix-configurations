@@ -25,7 +25,7 @@
                 (append (list "http://substitutes.lovergine.com https://substitutes.nonguix.org" "https://guix.bordeaux.inria.fr" "https://hydra-guix-129.guix.gnu.org")
                   (@@ (guix scripts substitute) %default-substitute-urls)))
                (authorized-keys
-                (append (list (local-file "./nonguix-signing-key.pub") (local-file "./ladestem-signing-key.pub") (local-file "./inria-signing-key.pub"))
+                (append (list (local-file "keys/nonguix-signing-key.pub") (local-file "keys/ladestem-signing-key.pub") (local-file "keys/inria-signing-key.pub"))
                   %default-authorized-guix-keys))))
 
 	     (elogind-service-type config => (elogind-configuration 
