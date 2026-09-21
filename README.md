@@ -1,4 +1,4 @@
-# Guix configurations for multple boxes 
+# Guix configurations for multiple boxes 
 
-Multiple configurations for both VMs and true laptops of mine are included here.
+Multiple configurations for both VMs and my true laptops are included here.
 
