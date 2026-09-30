@@ -22,10 +22,15 @@
              (guix-service-type config => (guix-configuration
                (inherit config)
                (substitute-urls
-                (append (list "http://substitutes.lovergine.com https://substitutes.nonguix.org" "https://guix.bordeaux.inria.fr" "https://hydra-guix-129.guix.gnu.org")
+                (append (list "http://substitutes.lovergine.com"
+                              "https://substitutes.nonguix.org"
+                              "https://guix.bordeaux.inria.fr" ; guix-science
+                              "https://hydra-guix-129.guix.gnu.org")
                   (@@ (guix scripts substitute) %default-substitute-urls)))
                (authorized-keys
-                (append (list (local-file "keys/nonguix-signing-key.pub") (local-file "keys/ladestem-signing-key.pub") (local-file "keys/inria-signing-key.pub"))
+                (append (list (local-file "keys/nonguix-signing-key.pub")
+                              (local-file "keys/ladestem-signing-key.pub")
+                              (local-file "keys/inria-signing-key.pub"))
                   %default-authorized-guix-keys))))
 
 	     (elogind-service-type config => (elogind-configuration 
@@ -58,6 +63,15 @@
             "9edb3f66fd807b096b48283debdcddccfea34bad"
             (openpgp-fingerprint
               "BBB0 2DDF 2CEA F6A8 0D1D  E643 A2A0 6DF2 A33A 54FA"))))
+      (channel
+        (name 'guix-science)
+        (url "https://codeberg.org/guix-science/guix-science.git")
+        (branch "master")
+        (introduction
+          (make-channel-introduction
+            "b1fe5aaff3ab48e798a4cce02f0212bc91f423dc"
+            (openpgp-fingerprint
+              "CA4F 8CF4 37D7 478F DA05  5FD4 4213 7701 1A37 8446"))))
 ))
 
 (operating-system
