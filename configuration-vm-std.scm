@@ -25,24 +25,8 @@
    #:locales (list "it_IT")
    #:name "glibc-italian-utf8-locales"))
 
-(define %my-services
-  (modify-services %desktop-services
-    (guix-service-type config => (guix-configuration
-               (inherit config)
-               (substitute-urls
-                (append (list "http://substitutes.lovergine.com"
-                              "https://substitutes.nonguix.org"
-                              "https://guix.bordeaux.inria.fr" ; guix-science
-                              "https://hydra-guix-129.guix.gnu.org")
-                  (@@ (guix scripts substitute) %default-substitute-urls)))
-               (authorized-keys
-                (append (list (local-file "keys/nonguix-signing-key.pub")
-                              (local-file "keys/ladestem-signing-key.pub")
-                              (local-file "keys/inria-signing-key.pub"))
-                  %default-authorized-guix-keys)))))) 
-
-;; Channels: guix, nonguix and guix-science
-(set! %default-channels (list 
+;; Channels: guix, nonguix and guix-science (written to /etc/guix/channels.scm)
+(define %my-channels (list 
       (channel
         (name 'nonguix)
         (url "https://gitlab.com/nonguix/nonguix.git")
@@ -71,6 +55,23 @@
             (openpgp-fingerprint
               "CA4F 8CF4 37D7 478F DA05  5FD4 4213 7701 1A37 8446"))))
 ))
+
+(define %my-services
+  (modify-services %desktop-services
+    (guix-service-type config => (guix-configuration
+               (inherit config)
+               (channels %my-channels)
+               (substitute-urls
+                (append (list "http://substitutes.lovergine.com"
+                              "https://substitutes.nonguix.org"
+                              "https://guix.bordeaux.inria.fr" ; guix-science
+                              "https://hydra-guix-129.guix.gnu.org")
+                  (@@ (guix scripts substitute) %default-substitute-urls)))
+               (authorized-keys
+                (append (list (local-file "keys/nonguix-signing-key.pub")
+                              (local-file "keys/ladestem-signing-key.pub")
+                              (local-file "keys/inria-signing-key.pub"))
+                  %default-authorized-guix-keys)))))) 
 
 (operating-system
   (locale "it_IT.utf8")
