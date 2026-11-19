@@ -84,6 +84,8 @@
   (keyboard-layout (keyboard-layout "it" "us"))
   (host-name "mithrandir")
 
+  (kernel-arguments '("modprobe.blacklist=eeepc_wmi,quiet"))
+
   ;; The list of user accounts ('root' is implicit).
   (users (cons* (user-account
                   (name "frankie")
